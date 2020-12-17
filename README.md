@@ -67,3 +67,27 @@
 ```
 
 ### 2.3. application.properties 配置文件
+```yaml
+server:
+  port: 8089
+
+# 邮箱配置
+spring:
+  mail:
+    host: smtp.qq.com  # 平台地址，这里使用的是qq邮箱
+    username: xxxxx.test@qq.com
+    password: xxxxxx
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+    default-encoding: utf-8
+  datasource:  # 数据库相关配置
+    url: jdbc:mysql//localhost:3306/emailSignUp?useSSL=true&characterEncoding=utf-8&serverTimezone=GMT
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+mybatis:   #配置mapper
+  mapper-locations: classpath:mapper/*.xml
+```
