@@ -4,4 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whoami.mailsignup.mapper.EmailUserMapper">
 
+    <insert id="insertEmailUser" parameterType="com.whoami.mailsignup.pojo.EmailUser">
+        INSERT INTO email_user (username,password,email)
+        VALUES (#{username},#{password},#{email})
+    </insert>
+    <select id="queryByEmail" resultType="com.whoami.mailsignup.pojo.EmailUser">
+        SELECT * FROM email_user WHERE email = #{email}
+    </select>
 </mapper>

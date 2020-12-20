@@ -1,7 +1,7 @@
 # SpringBoot 实现QQ邮箱登录注册 
 
 ## 1. 登录注册思路   
-### 1.1. 思路
+### 1.1 思路
 ```text
 注册：通过输入的邮箱发送验证码，校验前端传来的验证码是否和后台生成的一致，
 若一致，将数据写入数据库，完成注册。  
@@ -9,11 +9,11 @@
 登录：通过输入的邮箱查询密码，然后比较密码是否一致，一致就是登录成功。
 ```
 
-### 1.2. 整个项目结构图
+### 1.2 整个项目结构图
 ![]()
 
 ## 2. 准备
-### 2.1. 开启邮箱POP3/SMTP服务
+### 2.1 开启邮箱POP3/SMTP服务
 登录qq邮箱后，点击左上角设置，选择账户，如下图。   
 ![](./src/main/resources/static/image/bg/2-1.png) 
   
@@ -22,7 +22,7 @@
 
 ![](./src/main/resources/static/image/bg/2-2.png)  
 
-### 2.2. 创建SpringBoot项目，jdk选择8
+### 2.2 创建SpringBoot项目，jdk选择8
 `pom.xml依赖`
 ```xml
 <dependencies>
@@ -30,10 +30,24 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
     </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <!--web-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-mail</artifactId>
     </dependency>
+
     <!--mybatis-->
     <dependency>
         <groupId>org.mybatis.spring.boot</groupId>
@@ -51,22 +65,10 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-        <exclusions>
-            <exclusion>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
 </dependencies>
 ```
 
-### 2.3. application.properties 配置文件
+### 2.3 application.properties 配置文件
 ```yaml
 server:
   port: 8089
@@ -92,7 +94,7 @@ mybatis:   #配置mapper
   mapper-locations: classpath:mapper/*.xml
 ```
 
-### 2.4. 创建数据库
+### 2.4 创建数据库
 ```sql
 CREATE DATABASE email_signup;
 
@@ -112,7 +114,7 @@ vo包是前端发送数据暂时保存。
 执行流程： 使用postman发送请求，controller中会接受，然后调用service中的逻辑代码，service会调用的mapper中接口，
 mapper的对应的xml实现对数据库的各种操作。
 ```
-### 3.1. UserController.java
+### 3.1 UserController.java
 ```java
 @Controller
 public class UserController {
@@ -162,7 +164,7 @@ public interface UserMapper {
     User queryByEmail(String email);
 }
 ```
-### 3.3. User.java
+### 3.3 User.java
 ```java
 public class User {
     private String username;
@@ -173,7 +175,7 @@ public class User {
 
 }
 ```
-### 3.4. MailService.java
+### 3.4 MailService.java
 ```java
 @Service
 public class MailService {
@@ -284,7 +286,7 @@ public class MailService {
     }
 }
 ```
-### 3.5. UserVo.java
+### 3.5 UserVo.java
 ```java
 public class UserVo {
     private String username;
@@ -298,7 +300,7 @@ public class UserVo {
   //省略了get和set方法，自己生成一下
 }
 ```
-### 3.6. UserVoToUser.java
+### 3.6 UserVoToUser.java
 ```java
 public class UserVoToUser {
 
@@ -322,6 +324,33 @@ public class UserVoToUser {
     }
 }
 ```
-### 3.7. UserMapper.xml
+### 3.7 UserMapper.xml
 ```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whoami.mailsignup.mapper.EmailUserMapper">
+
+    <insert id="insertEmailUser" parameterType="com.whoami.mailsignup.pojo.EmailUser">
+        INSERT INTO email_user (username,password,email)
+        VALUES (#{username},#{password},#{email})
+    </insert>
+    <select id="queryByEmail" resultType="com.whoami.mailsignup.pojo.EmailUser">
+        SELECT * FROM email_user WHERE email = #{email}
+    </select>
+</mapper>
 ```
+## 4. 使用Postman测试
+### 4.1 测试发送邮件
+请求地址
+``http://localhost:8080/sendEmail?email=123456@qq.com``     
+![](./src/main/resources/static/image/bg/4-1.png)
+### 4.2 测试注册
+请求地址
+``http://localhost:8080/regist``    
+![](./src/main/resources/static/image/bg/4-2.png)
+### 4.3 测试登录
+请求地址
+``http://localhost:8080/login?email=123456@qq.com&password=12345``      
+![](./src/main/resources/static/image/bg/4-3.png)

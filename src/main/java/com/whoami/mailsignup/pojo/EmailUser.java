@@ -6,6 +6,10 @@ public class EmailUser {
     private String password;
     private String email;
 
+    public EmailUser() {
+
+    }
+
     public Integer getId() {
         return id;
     }
