@@ -1,12 +1,13 @@
 server:
   port: 8089
-
+  servlet:
+    context-path: /
 # 邮箱配置
 spring:
   mail:
     host: smtp.qq.com  # 平台地址，这里使用的是qq邮箱
-    username: xxxxxx.test@qq.com
-    password: xxxxxx
+    username: xxx.test@qq.com
+    password: xxxx     # 此处为开启POP3/SMTP获得的授权码
     properties:
       mail:
         smtp:
@@ -14,7 +15,7 @@ spring:
             enable: true
     default-encoding: utf-8
   datasource:  # 数据库相关配置
-    url: jdbc:mysql//localhost:3306/email_signup?useSSL=true&characterEncoding=utf-8&serverTimezone=GMT
+    url: jdbc:mysql://localhost:3306/email_signup?useSSL=false&characterEncoding=utf-8&serverTimezone=GMT
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
